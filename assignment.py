@@ -1,5 +1,5 @@
 import cards
-
+import collections
 
 def less_than(c1, c2):
     """Return
@@ -39,7 +39,15 @@ def flush_7(H):
     """Return a list of 5 cards forming a flush,
        if at least 5 of 7 cards form a flush in H, a list of 7 cards,
        False otherwise."""
-    pass
+    suit_cards_dict = collections.defaultdict(list)
+    for card in H:
+        suit_cards_dict[card.suit()].append(card)
+
+    for suit, card_list in suit_cards_dict.iteritems():
+        if len(card_list) >= 5:
+            return card_list[:5]
+
+    return False
 
 
 def straight_7(H):
@@ -98,18 +106,22 @@ def full_house_7(H):
 def main():
     D = cards.Deck()
     D.shuffle()
+    hand = [D.deal() for i in range(1, 9)]
+    print hand
 
-    while True:
-        # create community cards
-        # create Player 1 hand
-        # create Player 2 hand
-
-        print("-" * 40)
-        print("Let's play poker!\n")
-        print("Community cards:", community_list)
-        print("Player 1:", hand_1_list)
-        print("Player 2:", hand_2_list)
-        print()
+    print flush_7(hand)
+    #
+    # while True:
+    #     # create community cards
+    #     # create Player 1 hand
+    #     # create Player 2 hand
+    #
+    #     print("-" * 40)
+    #     print("Let's play poker!\n")
+    #     print("Community cards:", community_list)
+    #     print("Player 1:", hand_1_list)
+    #     print("Player 2:", hand_2_list)
+    #     print()
 
 
 if __name__ == "__main__":

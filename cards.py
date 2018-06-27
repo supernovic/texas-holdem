@@ -1,5 +1,5 @@
 import random
-
+import suits
 """
 NOTE: If your terminal can't decode the unicode card suit symbols, set up the
 bash terminal language environment to "en_US.utf8", like this --
@@ -27,7 +27,7 @@ class Card(object):
     # List to map int suit to printable character (index 0 used for no suit)
     # 1 is clubs, 2 is diamonds, 3 is hearts, and 4 is spades
     # suit_list = ['x','c','d','h','s']  # for systems that cannot print Unicode symbols
-    suit_list = ['x', '\u2663', '\u2666', '\u2665', '\u2660']
+    suit_list = ['x', suits.Suit.Clubs, suits.Suit.Diamonds, suits.Suit.Hearts, suits.Suit.Spades]
 
     def __init__(self, rank=0, suit=0):
         """ Initialize card to specified rank (1-13) and suit (1-4). """
@@ -67,7 +67,7 @@ class Card(object):
         """ Convert card into a string (usually for printing). """
         # Use rank to index into rank_list; use suit to index into suit_list.
         if self.__face_up:
-            return "{}{}".format((self.rank_list)[self.__rank], \
+            return "{}-{}".format((self.rank_list)[self.__rank], \
                                  (self.suit_list)[self.__suit])
         else:
             return "{}{}".format("X", "X")
@@ -124,7 +124,7 @@ class Deck(object):
         for index, card in enumerate(self.__deck):
             if index % cols == 0:
                 print()
-            print("{:3s} ".format(str(card)), end="" )
+            # print("{:3s} ".format(str(card)), end="" )
             print()
             print()
 
