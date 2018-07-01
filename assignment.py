@@ -1,5 +1,6 @@
 import cards
 import collections
+from operator import methodcaller
 
 def less_than(c1, c2):
     """Return
@@ -49,26 +50,58 @@ def flush_7(H):
 
     return False
 
-
 def straight_7(H):
     """Return a list of 5 cards forming a straight,
        if at least 5 of 7 cards form a straight in H, a list of 7 cards,
        False otherwise."""
-    pass
+    sorted_hand = sorted(H, key=methodcaller('rank'))
+    sorted_hand_tuples = [(sorted_hand[i], sorted_hand[i+1], sorted_hand[i+2], sorted_hand[i+3], sorted_hand[i+4]) for i in range(3)]
+    for hand in sorted_hand_tuples:
+        if is_straight(hand):
+            return list(hand)
+    return False
+
+def is_straight(H):
+    """ Returns True if the given 5 card hand is a straight."""
+    for i in range(4):
+        if H[i].rank() != H[i+1].rank() - 1:
+            return False
+    return True
+
+def is_flush(hand):
+    """Return True if the given 5 card hand is a flush"""
+    # suit_set = set([card.suit() for card in hand])
+    # return len(suit_set) == 1
+    return all(card.suit() == hand[0].suit() for card in hand)
 
 
 def straight_flush_7(H):
     """Return a list of 5 cards forming a straight flush,
        if at least 5 of 7 cards form a straight flush in H, a list of 7 cards,
        False otherwise."""
-    pass
+    sorted_hand = sorted(H, key=methodcaller('value'))
+    sorted_hand_tuples = [(sorted_hand[i], sorted_hand[i+1], sorted_hand[i+2], sorted_hand[i+3], sorted_hand[i+4]) for i in range(3)]
+    for hand in sorted_hand_tuples:
+        if is_straight(hand) and is_flush(hand):
+            return list(hand)
 
+    return False
 
 def four_7(H):
     """Return a list of 4 cards with the same rank,
        if 4 of the 7 cards have the same rank in H, a list of 7 cards,
        False otherwise."""
-    pass
+    card_dict = {}
+    for card in H:
+        if card.rank() in card_dict:
+            card_dict[card.rank()] = card_dict.get(card.rank()) + 1
+        else:
+            card_dict[card.rank()] = 1
+
+    for rank in card_dict.keys():
+        if card_dict.get(rank) == 4:
+            return filter(lambda c: c.rank() == rank, H)
+    return False
 
 
 def three_7(H):
@@ -104,13 +137,18 @@ def full_house_7(H):
 
 
 def main():
-    D = cards.Deck()
-    D.shuffle()
-    hand = [D.deal() for i in range(1, 9)]
-    print hand
 
-    print flush_7(hand)
-    #
+    for i in range(2000):
+        D = cards.Deck()
+        D.shuffle()
+        hand = [D.deal() for i in range(1, 8)]
+        if straight_7(hand) is not False:
+            print 'Found straight'
+            print straight_7(hand)
+        # if four_7(hand) is not False:
+        #     print 'Found 4 of a kind'
+        #     print four_7(hand)
+
     # while True:
     #     # create community cards
     #     # create Player 1 hand
